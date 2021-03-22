@@ -1,0 +1,79 @@
+---
+title: 'Responsive props with SSR, client hints to the rescue?'
+publishedDate: '2020-07-06'
+---
+
+# Responsive props with SSR: client hints to the rescue?
+
+## The goal
+
+I wanted to create a React utility to add responsive behavior to any existing component props.
+
+```
+<Header isSticky={false} />
+```
+
+could become:
+
+```
+<Header isSticky={[true, false]} />
+```
+
+This would allow JS driven behavior to be toggled based on screen size.
+
+The responsive syntax is based off Styled System, which uses the same idea for styling CSS properties, like this:
+
+```
+<StyledSystemBasedButton margin={[5, 10]} />
+```
+
+## The trouble
+
+I ran into some trouble when I started thinking about server side rendering (SSR). This is an important consideration for me as I'm trying to create a best practice framework.
+
+Since the server doesn't know the client's screen size, the options to SSR a responsive prop are pretty limited.
+
+1. One thing we can do is assume a certain breakpoint, like assuming the lowest breakpoint is true for all props. This works perfectly if the user happens to be on that breakpoint, but will render the wrong thing if they're not and will require a re-render as soon as you get to the client, negating the point of SSR (and maybe causing SEO issues by always rendering mobile behavior from the server?)
+
+2. Another approach is try to guess at the user's screen size based on their user agent. This would probably work the majority of the time, but user agents are not reliable, can change, and would give the wrong result a non-acceptable amount of the time.
+
+3. We could skip rendering any components with responsive props until they get to the client. This is probably the most reliable method I can think of, but loses out on the benefits of SSR. You could potentially negate almost all your SSR if you use responsive props to drive your layout.
+
+## What's out there?
+
+Most responsive solutions for React seem to ignore server rendering. I can certainly understand why, but I don't think it's a valid thing to do.
+
+Artsy seems to be doing great work in this area, with these libraries:
+https://github.com/artsy/detect-responsive-traits
+https://github.com/artsy/fresnel
+
+They've basically accepted the challenge of user agent sniffing and doing the best they can with the information that's available.
+
+## What's coming?
+
+#### Client hints would solve this issue:
+
+https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/client-hints
+https://httpwg.org/http-extensions/client-hints.html
+
+It's a work in progress that would allow the client to tell the server about the viewport size at time of request. This would be great as it would allow the server to render the exact content that the viewport cares about. Future viewport resizes would be handled on the client with the matchMedia listener.
+
+You can use client hints on Chrome and Edge, but not on FireFox or Safari at this time. caniuse.com estimates global support for client hints at 73% of users (and they also require https to work). There's a 7 year old issue for FireFox to consider implementing it, so I wouldn't count on any adoption there soon:
+https://bugzilla.mozilla.org/show_bug.cgi?id=935216
+
+That said, it looks like there is movement happening right now to make client hints more officially part of the IETF HTTP working group spec.
+
+## Conclusion
+
+At the moment, responsive react and SSR are fundamentally incompatible without trade-offs. Hopefully client hints will provide a long term solution.
+
+It may be possible to implement a client hint based solution that falls back to one of the trade-off solutions for other browsers. I'll likely proceed with a PoC on this idea and see how it goes.
+
+#### Misc reference
+
+To turn on client hints:
+
+Server can turn them on, or:
+`<meta http-equiv="Accept-CH" content="DPR,Width,Viewport-Width">`
+
+Note that client hints require https.

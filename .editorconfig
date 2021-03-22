@@ -1,0 +1,29 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 2
+indent_style = space
+insert_final_newline = true
+max_line_length = 80
+tab_width = 2
+trim_trailing_whitespace = true
+
+[{.prettierrc,.runtimerc,.stylelintrc,.eslintrc,.firebaserc,.babelrc,jest.config,*.json}]
+indent_size = 2
+
+[*.css]
+indent_size = 2
+tab_width = 2
+
+[{*.html,*.svg}]
+indent_size = 2
+tab_width = 2
+
+[{*.js,*.ts,*.jsx,*.tsx}]
+indent_size = 2
+tab_width = 2
+
+[{*.md,*.mdx}]
+trim_trailing_whitespace = false
