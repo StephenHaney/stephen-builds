@@ -58,7 +58,9 @@ https://httpwg.org/http-extensions/client-hints.html
 
 It's a work in progress that would allow the client to tell the server about the viewport size at time of request. This would be great as it would allow the server to render the exact content that the viewport cares about. Future viewport resizes would be handled on the client with the matchMedia listener.
 
-You can use client hints on Chrome and Edge, but not on FireFox or Safari at this time. caniuse.com estimates global support for client hints at 73% of users (and they also require https to work). There's a 7 year old issue for FireFox to consider implementing it, so I wouldn't count on any adoption there soon:
+You can use client hints on Chrome and Edge, but not on FireFox or Safari at this time. caniuse.com estimates global support for client hints at 73% of users (and they also require https to work).
+
+There's a 7 year old issue for FireFox to consider implementing it, so I wouldn't count on any adoption there soon:
 https://bugzilla.mozilla.org/show_bug.cgi?id=935216
 
 That said, it looks like there is movement happening right now to make client hints more officially part of the IETF HTTP working group spec.
@@ -67,7 +69,9 @@ That said, it looks like there is movement happening right now to make client hi
 
 At the moment, responsive react and SSR are fundamentally incompatible without trade-offs. Hopefully client hints will provide a long term solution.
 
-It may be possible to implement a client hint based solution that falls back to one of the trade-off solutions for other browsers. I'll likely proceed with a PoC on this idea and see how it goes.
+It may be possible to implement a client hint based solution that falls back to one of the trade-off solutions for other browsers.
+
+For instance, using client hints where it's available (73%) combined with falling back to assuming mobile if client hints are not supported — which would cover iPhone Safari — may cover the large majority of internet users. Desktop Safari and Desktop FireFox users would see a flash of mobile styles before the class is changed to reflect the valid matchMedia.
 
 #### Misc reference
 
