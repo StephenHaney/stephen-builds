@@ -11,11 +11,15 @@ export default function Home({ posts }: { posts: Array<Post> }) {
       </Head>
 
       <div style={{ margin: 'auto', maxWidth: 750, paddingBottom: 64, paddingTop: 64 }}>
-        {posts.map((post) => (
-          <a key={post.slug} href={post.slug}>
-            {post.data?.title || post.slug}
-          </a>
-        ))}
+        {posts.map((post) => {
+          const fullUrl = `/blog/${post.slug}`;
+
+          return (
+            <a key={fullUrl} href={fullUrl}>
+              {post.data?.title || post.slug}
+            </a>
+          );
+        })}
       </div>
     </>
   );
