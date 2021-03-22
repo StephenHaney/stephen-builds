@@ -65,13 +65,17 @@ https://bugzilla.mozilla.org/show_bug.cgi?id=935216
 
 That said, it looks like there is movement happening right now to make client hints more officially part of the IETF HTTP working group spec.
 
-## Conclusion
+## Conclusion for SSR
 
 At the moment, responsive react and SSR are fundamentally incompatible without trade-offs. Hopefully client hints will provide a long term solution.
 
 It may be possible to implement a client hint based solution that falls back to one of the trade-off solutions for other browsers.
 
 For instance, using client hints where it's available (73%) combined with falling back to assuming mobile if client hints are not supported — which would cover iPhone Safari — may cover the large majority of internet users. Desktop Safari and Desktop FireFox users would see a flash of mobile styles before the class is changed to reflect the valid matchMedia.
+
+## SSG remains unsolved
+
+Note: client hints does not resolve the problem in SSG, where all HTML/CSS/JS is generated before hand. Here, there is no solution for the initial page load, it would need to wait for client side logic to correct it.
 
 #### Misc reference
 
